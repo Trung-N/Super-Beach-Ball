@@ -1,0 +1,8 @@
+Library/
+obj/
+Packages/
+ProjectSettings/
+Temp/
+.vs/
+Assembly-CSharp.csproj
+runner_game.sln
