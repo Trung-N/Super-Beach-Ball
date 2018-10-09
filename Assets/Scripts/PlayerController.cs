@@ -12,10 +12,11 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
     if (jump){
-      this.transform.Translate(Vector3.left * jumpspeed * (Time.deltaTime*5));
+      transform.position = new Vector3(transform.position.x, transform.position.y + jumpspeed * (Time.deltaTime*5), transform.position.z);
       jumpspeed=jumpspeed-(Time.deltaTime*5);
       if(jumpspeed<-2.0f){
         jump = false;
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
       }
     }
     if (Input.GetKeyDown(KeyCode.Z) && !jump)
@@ -26,11 +27,11 @@ public class PlayerController : MonoBehaviour {
       }
 	    if (Input.GetKey(KeyCode.LeftArrow))
         {
-            this.transform.Translate(Vector3.down * speed * Time.deltaTime);
+            transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            this.transform.Translate(Vector3.up * speed * Time.deltaTime);
+            transform.position = new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
         if (Input.GetKeyDown(KeyCode.Space) && !jump)
         {
