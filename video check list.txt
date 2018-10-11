@@ -1,0 +1,8 @@
+1 30
+
+show start sceen
+show options >pick between easy hard
+start game
+show player movement
+show enemy interaction
+show block interaction
