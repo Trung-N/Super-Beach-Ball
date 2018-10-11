@@ -2,13 +2,11 @@
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
-	
+	public float speed = 5;
+
 	// Update is called once per frame
 	void Update () {
-        HealthManager healthManager = this.gameObject.GetComponent<HealthManager>();
-        MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
 
-        // Make enemy material darker based on its health
-        renderer.material.color = Color.red * ((float)healthManager.GetHealth() / 100.0f);
+        transform.Translate(Vector3.back * Time.deltaTime*speed);
 	}
 }

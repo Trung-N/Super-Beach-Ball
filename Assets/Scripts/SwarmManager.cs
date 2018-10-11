@@ -1,76 +1,73 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class SwarmManager : MonoBehaviour {
+public class SwarmManager : MonoBehaviour
+{
 
     // External parameters/variables
     public GameObject enemyTemplate;
-    public int enemyRows;
-    public int enemyCols;
-    public float enemySpacing;
+    //public int enemyRows;
+    //public int enemyCols;
     public float stepSize;
     public float stepTime;
     public float maxXDeviation;
+    public float planeSize;
 
     // Internal parameters/variables
     private int direction;
     private float stepCountdown;
     private float swarmWidth;
-    
-	// Use this for initialization
-	void Start () {
-        GenerateSwarm();
+    private float generationTimer;
 
+    // Use this for initialization
+    void Start () {
+        GenerateSwarm();
+        this.generationTimer = 1.0f;
         // Initial parameters
         this.stepCountdown = this.stepTime;
         this.transform.localPosition = Vector3.left * maxXDeviation; // Start at far left
         this.direction = 1; // Start moving towards the right (positive x-axis)
 	}
-	
+
+
+
+
 	// Update is called once per frame
 	void Update () {
         this.stepCountdown -= Time.deltaTime;
-        if (this.stepCountdown < 0.0f)
+        this.generationTimer -= Time.deltaTime;
+        if (this.generationTimer < 0.0f)
         {
-            // Perform a single step to move the swarm across (or down)
-            // Then reset the timer to periodically perform such steps
-            this.StepSwarm();
-            this.stepCountdown = this.stepTime;
+            GenerateSwarm();
+            this.generationTimer = 1.0f;
         }
 	}
 
-    // Method to automatically generate swarm of enemies based on the set public attributes
+
+    // Method to generate swarm of enemies randomly ## Zhuoping Miao
     private void GenerateSwarm()
     {
-        // Create swarm of enemies in a grid formation
-        for (int row = 0; row < enemyRows; row++)
-        {
-            for (int col = 0; col < enemyCols; col++)
-            {
-                GameObject enemy = GameObject.Instantiate<GameObject>(enemyTemplate);
-                enemy.transform.parent = this.transform;
-                enemy.transform.localPosition = new Vector3(col, 0.0f, row) * enemySpacing;
-            }
+        int swarmNumber = Random.Range(1, 4);
+        float lowbound = -20.0f;
+        float upbound = 20.0f;
+        float col;
+        for (int i = 0; i < swarmNumber; i++){
+            col = Random.Range(lowbound, upbound);
+            if (col >= 0) { upbound = col; }
+            else { lowbound = col; }
+
+            GameObject enemy = GameObject.Instantiate<GameObject>(enemyTemplate);
+            enemy.transform.parent = this.transform;
+            enemy.transform.localPosition = new Vector3(col, 0.0f, planeSize);
         }
-        this.swarmWidth = (enemyCols - 1) * enemySpacing;
+        //this.swarmWidth = (enemyCols - 1) * enemySpacing;
     }
 
+
     // Method to step a swarm across the screen (or down & reverse when it reaches the edge)
-    private void StepSwarm()
+    private void StepSwarm(GameObject swarm)
     {
-        // Check if the swarm has reached the "edge" of its allowed movement range, as specified
-        // by the "Max X Deviation" parameter. If so swarm should move down; otherwise sideways.
-        if (this.transform.localPosition.x < -maxXDeviation && this.direction == -1 || 
-            this.transform.localPosition.x + swarmWidth > maxXDeviation && this.direction == 1)
-        {
-            // Move swarm down
-            this.transform.Translate(Vector3.back * stepSize);
-            this.direction = -this.direction;
-        }
-        else
-        {
-            // Move swarm sideways
-            this.transform.Translate(Vector3.right * this.direction * stepSize);
-        }
+
     }
 }
