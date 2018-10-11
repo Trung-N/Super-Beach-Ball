@@ -17,6 +17,7 @@ public class GroundScript : MonoBehaviour
         transform.Translate(Vector3.forward * this.count);
         this.count = 0;
       }
+      speed += Time.deltaTime/10;
     }
 
 }

@@ -28,6 +28,7 @@ public class WaterScript : MonoBehaviour
       if (this.count2 <=0){
         this.dir = 1;
       }
+      speed += Time.deltaTime/10;
     }
 
 }
