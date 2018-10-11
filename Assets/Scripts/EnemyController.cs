@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
-	public float speed = 5;
+	private float speed;
 	private float dir;
 	public float range = 8.0f;
 
@@ -36,5 +36,10 @@ public class EnemyController : MonoBehaviour {
 				}
 				speed+=Time.deltaTime/10;
 
+	}
+
+	public void setSpeed(float speed)
+	{
+		this.speed = speed;
 	}
 }

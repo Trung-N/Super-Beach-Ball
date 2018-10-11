@@ -2,61 +2,70 @@
 
 Shader "Custom/Lighting/CelShader"
 {
-    Properties
-    {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Treshold ("Cel treshold", Range(1., 20.)) = 5.
-        _Ambient ("Ambient intensity", Range(0., 0.5)) = 0.1
-    }
-    SubShader
-    {
-        Tags { "RenderType"="Opaque" "LightMode"="ForwardBase" }
+Properties
+ {
+     _Color("Main Color", Color) = (1, 1, 1, 1)
+     _MainTex("Albedo (RGB)", 2D) = "white" {}
+ }
 
-        Pass
-        {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+     SubShader
+     {
+         Tags
+         {
+             "RenderType" = "Opaque"
+         }
+     LOD 200
 
-            #include "UnityCG.cginc"
+     CGPROGRAM
+     #pragma surface surf CelShadingForward
+     #pragma    target 3.0
+     #include "AutoLight.cginc"
+     #define UnityStandardBRDFCustom.cginc
 
-            struct v2f
-            {
-                float4 pos : SV_POSITION;
-                float2 uv : TEXCOORD0;
-                float3 worldNormal : NORMAL;
-            };
+     half4 LightingCelShadingForward(SurfaceOutput s, half3 lightDir, half atten)
+ {
+     half NdotL = dot(s.Normal, lightDir);
+     if (NdotL <= 0.0) NdotL = 0.14f;
+     else if (NdotL > 0.0f && NdotL <= 0.1f) NdotL = 0.15f;
+     else if (NdotL > 0.1f && NdotL <= 0.2f) NdotL = 0.2f;
+     else if (NdotL > 0.2f && NdotL <= 0.3f) NdotL = 0.3f;
+     else if (NdotL > 0.3f && NdotL <= 0.4f) NdotL = 0.4f;
+     else if (NdotL > 0.4f && NdotL <= 0.5f) NdotL = 0.5f;
+     else if (NdotL > 0.5f && NdotL <= 0.6f) NdotL = 0.6f;
+     else if (NdotL > 0.6f && NdotL <= 0.7f) NdotL = 0.7f;
+     else if (NdotL > 0.7f && NdotL <= 0.8f) NdotL = 0.8f;
+     else if (NdotL > 0.8f && NdotL <= 0.9f) NdotL = 0.9f;
+     else NdotL = 1;
 
-            float _Treshold;
+     NdotL = smoothstep(0, 0.625f, NdotL);
+     NdotL /= 2.5f;
 
-            float LightToonShading(float3 normal, float3 lightDir)
-            {
-                float NdotL = max(0.0, dot(normalize(normal), normalize(lightDir)));
-                return floor(NdotL * _Treshold) / (_Treshold - 0.5);
-            }
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
+     half4 c;
+     c.rgb = s.Albedo * _LightColor0.rgb * (NdotL * atten  * 2); // THe *2 makes it brighter
+     c.a = s.Alpha;
+     return c;
+ }
 
-            v2f vert (appdata_full v)
-            {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-                o.worldNormal = mul(v.normal.xyz, (float3x3) unity_WorldToObject);
-                return o;
-            }
 
-            fixed4 _LightColor0;
-            half _Ambient;
 
-            fixed4 frag (v2f i) : SV_Target
-            {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col.rgb *= saturate(LightToonShading(i.worldNormal, _WorldSpaceLightPos0.xyz) + _Ambient) * _LightColor0.rgb;
-                return col;
-            }
-            ENDCG
-        }
-    }
+ sampler2D _MainTex;
+ fixed4 _Color;
+
+ struct Input
+ {
+     fixed2 uv_MainTex;
+
+ };
+
+ void surf(Input IN, inout SurfaceOutput o) {
+     // Albedo comes from a texture tinted by color
+     fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+     o.Albedo = c.rgb;
+     o.Alpha = c.a;
+ }
+ ENDCG
+ } // End of Subshader
+     FallBack "Diffuse"
+
 }

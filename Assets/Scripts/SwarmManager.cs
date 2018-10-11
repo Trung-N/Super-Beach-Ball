@@ -7,27 +7,18 @@ public class SwarmManager : MonoBehaviour
 
     // External parameters/variables
     public GameObject enemyTemplate;
-    //public int enemyRows;
-    //public int enemyCols;
-    public float stepSize;
-    public float genTime = 2;
-    public float stepTime;
-    public float maxXDeviation;
-    public float planeSize;
-    public int genSize;
 
-    // Internal parameters/variables
-    private int direction;
-    private float stepCountdown;
-    private float swarmWidth;
-    private float generationTimer;
+    public float maxGenTime = 2.0f;
+    public float minGenTime = 1.0f;
+    public float generationTimer = 2;
+    public float range = 10;
+    public int genSize = 1;
+    public float speed;
+
 
     // Use this for initialization
     void Start () {
-        GenerateSwarm();
-        this.generationTimer = genTime;
-        // Initial parameters
-        this.stepCountdown = this.stepTime;
+        this.generationTimer = Random.Range(minGenTime,maxGenTime);
 	}
 
 
@@ -35,31 +26,35 @@ public class SwarmManager : MonoBehaviour
 
 	// Update is called once per frame
 	void Update () {
-        this.stepCountdown -= Time.deltaTime;
         this.generationTimer -= Time.deltaTime;
         if (this.generationTimer < 0.0f)
         {
-            GenerateSwarm();
-            this.generationTimer = genTime;
+            GenerateRow();
+            this.generationTimer = Random.Range(minGenTime,maxGenTime);
         }
+        speed+=Time.deltaTime/10;
 	}
 
 
     // Method to generate swarm of enemies randomly ## Zhuoping Miao
-    private void GenerateSwarm()
+    private void GenerateRow()
     {
         int swarmNumber = Random.Range(1, genSize);
-        float lowbound = -8.0f;
-        float upbound = 8.0f;
-        float col;
-        for (int i = 0; i < swarmNumber; i++){
-            col = Random.Range(lowbound, upbound);
-            if (col >= 0) { upbound = col; }
-            else { lowbound = col; }
+        float col = Random.Range(0-range,range-swarmNumber);
 
+        for (int i = 0; i < swarmNumber; i++){
             GameObject enemy = GameObject.Instantiate<GameObject>(enemyTemplate);
             enemy.transform.parent = this.transform;
-            enemy.transform.localPosition = new Vector3(col, 0.0f, planeSize);
+            enemy.transform.localPosition = new Vector3(col*1.0f+0.5f, 0.0f, 0.0f);
+            BlockController blockScript = enemy.GetComponent<BlockController>();
+            if (blockScript == null){
+              EnemyController enemyScript = enemy.GetComponent<EnemyController>();
+              enemyScript.setSpeed(speed);
+            }
+            else{
+              blockScript.setSpeed(speed);
+            }
+            col++;
         }
     }
 
