@@ -27,23 +27,8 @@ Shader "WaveShader"
             float LightToonShading(float3 normal, float3 lightDir)
             {
                 float NdotL = dot(normalize(normal), normalize(lightDir));
-                if (NdotL < 0.1f){
-                  NdotL = 0.1f;
-                }
-                else if (NdotL < 0.2f){
-                  NdotL = 0.2f;
-                }
-                else if (NdotL < 0.4f){
-                  NdotL = 0.4f;
-                }
-                else if (NdotL < 0.6f){
-                  NdotL = 0.6f;
-                }
-                else if (NdotL < 0.8f){
+                if (NdotL < 0.8f){
                   NdotL = 0.8f;
-                }
-                else {
-                  NdotL = 1.0f;
                 }
                 return NdotL;
             }
@@ -58,9 +43,17 @@ Shader "WaveShader"
 								float4 displacement = float4(2.5*cos(f), 0, 0.0f, 0.0f);
 								v.vertex.y = 2.5*sin(f);
 
+                float3 tangent = normalize(float3(
+                  1 - k * 2.5 * sin(f),
+                  k * 2.5 * cos(f),
+                  0
+                ));
+                float3 normal = float3(-tangent.y, tangent.x, 0);
+
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex) + displacement;
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.worldNormal = normal;
 
 
                 return o;

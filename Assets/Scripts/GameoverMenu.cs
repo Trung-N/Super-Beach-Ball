@@ -14,7 +14,7 @@ public class GameoverMenu : MonoBehaviour {
     }
 
   public void QuitToMenu () {
-  	  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+  	  SceneManager.LoadScene(0);
     }
 
 		public void setScore (int score, int kills) {
