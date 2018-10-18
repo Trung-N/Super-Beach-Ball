@@ -9,13 +9,19 @@ public class ScoreScript : MonoBehaviour {
 	public Text scoreDisplay;
 	public Text killDisplay;
 	private int killCount = 0;
-	public GameObject gameover;
+	public GameObject controls;
 
 
 	// Use this for initialization
 	void Start () {
 		scoreDisplay.text = "Score: "+score;
 		killDisplay.text = "Kills: "+killCount;
+	}
+
+	void Update () {
+		if(score > 1000){
+			controls.SetActive(false);
+		}
 	}
 
 
