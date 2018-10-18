@@ -1,11 +1,8 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/Lighting/CelShader"
+Shader "WaveShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Treshold ("Cel treshold", Range(1., 20.)) = 5.
         _Ambient ("Ambient intensity", Range(0., 0.5)) = 0.1
     }
     SubShader
@@ -27,12 +24,28 @@ Shader "Custom/Lighting/CelShader"
                 float3 worldNormal : NORMAL;
             };
 
-            float _Treshold;
-
             float LightToonShading(float3 normal, float3 lightDir)
             {
-                float NdotL = max(0.0, dot(normalize(normal), normalize(lightDir)));
-                return floor(NdotL * _Treshold) / (_Treshold - 0.5);
+                float NdotL = dot(normalize(normal), normalize(lightDir));
+                if (NdotL < 0.1f){
+                  NdotL = 0.1f;
+                }
+                else if (NdotL < 0.2f){
+                  NdotL = 0.2f;
+                }
+                else if (NdotL < 0.4f){
+                  NdotL = 0.4f;
+                }
+                else if (NdotL < 0.6f){
+                  NdotL = 0.6f;
+                }
+                else if (NdotL < 0.8f){
+                  NdotL = 0.8f;
+                }
+                else {
+                  NdotL = 1.0f;
+                }
+                return NdotL;
             }
 
             sampler2D _MainTex;
@@ -40,10 +53,16 @@ Shader "Custom/Lighting/CelShader"
 
             v2f vert (appdata_full v)
             {
+								float k = 2 * UNITY_PI/ 3;
+								float f = k * (v.vertex.x - 1 * _Time.y);
+								float4 displacement = float4(2.5*cos(f), 0, 0.0f, 0.0f);
+								v.vertex.y = 2.5*sin(f);
+
                 v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex) + displacement;
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-                o.worldNormal = mul(v.normal.xyz, (float3x3) unity_WorldToObject);
+
+
                 return o;
             }
 
@@ -53,10 +72,11 @@ Shader "Custom/Lighting/CelShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                col.rgb *= saturate(LightToonShading(i.worldNormal, _WorldSpaceLightPos0.xyz) + _Ambient) * _LightColor0.rgb;
+                col.rgb = col.rgb* LightToonShading(i.worldNormal, _WorldSpaceLightPos0.xyz)* _LightColor0.rgb + _Ambient;
                 return col;
             }
             ENDCG
         }
     }
+    FallBack "Diffuse"
 }

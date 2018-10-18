@@ -1,4 +1,4 @@
-Shader "CelShader"
+Shader "WaveShader"
 {
     Properties
     {
@@ -53,10 +53,15 @@ Shader "CelShader"
 
             v2f vert (appdata_full v)
             {
+								float3 p = v.vertex.xyz;
+								p.y = 5 * sin((p.z- 1 * _Time.y));
+								v.vertex.xyz = p;
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.worldNormal = mul(v.normal.xyz, (float3x3) unity_WorldToObject);
+
+
                 return o;
             }
 
