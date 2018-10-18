@@ -54,14 +54,18 @@ Shader "WaveShader"
             v2f vert (appdata_full v)
             {
 								float3 p = v.vertex.xyz;
-								p.y = 5 * sin((p.z- 1 * _Time.y));
+								float k = 2 * UNITY_PI / 2;
+								float f = k*(p.z- 1 * _Time.y);
+								p.y = 1 * sin(f);
 								v.vertex.xyz = p;
+
+								float3 tangent = normalize(float3(1, k * 1 * cos(f), 0));
+
+
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.worldNormal = mul(v.normal.xyz, (float3x3) unity_WorldToObject);
-
-
                 return o;
             }
 

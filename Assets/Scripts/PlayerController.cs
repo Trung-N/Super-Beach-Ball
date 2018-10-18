@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     private bool jump = false;
     private float jumpspeed;
     private float height;
+    public float range = 4.5f;
 
 	// Update is called once per frame
 	void Update () {
@@ -26,11 +27,11 @@ public class PlayerController : MonoBehaviour {
           jumpspeed = 2.0f;
 
       }
-	    if (Input.GetKey(KeyCode.LeftArrow))
+	    if (Input.GetKey(KeyCode.LeftArrow) && transform.position.x >= range * - 1)
         {
             transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && transform.position.x <= range)
         {
             transform.position = new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
