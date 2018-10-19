@@ -12,11 +12,11 @@ public class GameoverMenu : MonoBehaviour {
 
 
 	public void retry () {
-	    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
   public void QuitToMenu () {
-  	  SceneManager.LoadScene(0);
+  	  SceneManager.LoadScene("Menu");
     }
 
 		public void setScore (int score, int kills) {

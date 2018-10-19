@@ -10,7 +10,13 @@ public class Menu : MonoBehaviour {
 	public Text modeDisplay;
 
 	public void PlayGame () {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + mode);
+		if(mode == 1){
+			SceneManager.LoadScene("Easy");
+		}
+		else{
+			SceneManager.LoadScene("Hard");
+		}
+
 	}
 
 	public void QuitGame () {
@@ -35,7 +41,7 @@ public class Menu : MonoBehaviour {
 
 	private void DisplayMode(){
 		if(mode == 1){
-			modeDisplay.text = "Normal";
+			modeDisplay.text = "Easy";
 		}
 		else{
 			modeDisplay.text = "Hard";
