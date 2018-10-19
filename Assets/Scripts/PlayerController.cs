@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
         transform.position = new Vector3(transform.position.x, 0.01f, transform.position.z);
       }
     }
-    if (Input.GetKeyDown(KeyCode.Z) && !jump)
+    if (Input.GetKeyDown(KeyCode.Space) && !jump)
       {
           jump = true;
           jumpspeed = 2.0f;
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour {
         {
             transform.position = new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && !jump)
+        if (Input.GetKeyDown(KeyCode.Z) && !jump)
         {
             GameObject projectile = Instantiate<GameObject>(projectilePrefab);
             projectile.transform.position = this.gameObject.transform.position + new Vector3(0.0f, 0.0f, 1.0f);
