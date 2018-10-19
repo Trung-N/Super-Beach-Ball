@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class GameoverMenu : MonoBehaviour {
 	public Text scoreDisplay;
 	public Text killDisplay;
+	public Text highscoreDisplay;
+	private int highscore;
 
 
 	public void retry () {
@@ -18,7 +20,13 @@ public class GameoverMenu : MonoBehaviour {
     }
 
 		public void setScore (int score, int kills) {
-			scoreDisplay.text =score + "POINTS";
-			killDisplay.text =kills + "KILLS";
-	    }
+			scoreDisplay.text ="YOUR SCORE: " + score;
+			killDisplay.text ="KILLS: " + kills;
+			highscore = PlayerPrefs.GetInt ("highscore", highscore);
+			highscoreDisplay.text = "HIGHSCORE: " + highscore;
+			if(score>highscore){
+				PlayerPrefs.SetInt ("highscore", score);
+				highscoreDisplay.text = "NEW HIGHSCORE: " + score;
+			}
+	  }
 }

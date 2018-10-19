@@ -18,6 +18,7 @@ public class Menu : MonoBehaviour {
 	}
 	public void Options () {
 		option.SetActive(true);
+		mode = PlayerPrefs.GetInt ("mode", mode);
 		this.DisplayMode();
 	}
 	public void Back () {
@@ -43,10 +44,12 @@ public class Menu : MonoBehaviour {
 
 	private void SetHard () {
 		mode = 2;
+		PlayerPrefs.SetInt ("mode", 2);
 		this.DisplayMode();
 	}
 	private void SetNormal () {
 		mode = 1;
+		PlayerPrefs.SetInt ("mode", 1);
 		this.DisplayMode();
 	}
 }

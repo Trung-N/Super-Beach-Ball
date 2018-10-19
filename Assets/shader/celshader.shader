@@ -24,7 +24,7 @@ Shader "CelShader"
                 float3 worldNormal : NORMAL;
             };
 
-            float LightToonShading(float3 normal, float3 lightDir)
+            float Shading(float3 normal, float3 lightDir)
             {
                 float NdotL = dot(normalize(normal), normalize(lightDir));
                 if (NdotL < 0.1f){
@@ -66,7 +66,7 @@ Shader "CelShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                col.rgb = col.rgb* LightToonShading(i.worldNormal, _WorldSpaceLightPos0.xyz)* _LightColor0.rgb + _Ambient;
+                col.rgb = col.rgb* Shading(i.worldNormal, _WorldSpaceLightPos0.xyz)* _LightColor0.rgb + _Ambient;
                 return col;
             }
             ENDCG
